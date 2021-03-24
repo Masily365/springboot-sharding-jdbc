@@ -1,0 +1,42 @@
+spring:
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+
+  shardingsphere:
+    enabled: true
+    # 数据源配置
+    datasource:
+      names: ds0,ds1,ds2
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:33077/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+        username: root
+        password: 123456
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:33070/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+        username: root
+        password: 123456
+      ds2:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:33071/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+        username: root
+        password: 123456
+    # 读写分离
+    masterslave:
+      name: ds
+      # 主库数据源名称
+      master-data-source-name: ds0
+      # 从库数据源名称列表
+      slave-data-source-names:
+        - ds1
+        - ds2
+      # 读写分离负载算法的属性配置
+      load-balance-algorithm-type: ROUND_ROBIN
+    props:
+      sql.show: true
